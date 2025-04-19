@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Word to PDF Converter</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -13,33 +14,61 @@
 
     body {
       margin: 0;
-      padding: 0;
-      background: #f3f6fc;
+      background: #f5f7fa;
       display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
+    }
+
+    nav h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: #007bff;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav ul li {
+      cursor: pointer;
+      color: #333;
+    }
+
+    nav ul li:hover {
+      color: #007bff;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
       justify-content: center;
-      height: 100vh;
+      align-items: center;
+      padding: 40px 20px;
     }
 
     .card {
-      background: white;
-      padding: 40px;
+      background: #fff;
+      padding: 30px;
       border-radius: 20px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       width: 100%;
-      max-width: 420px;
+      max-width: 500px;
       text-align: center;
-    }
-
-    .card h2 {
-      margin-bottom: 20px;
-      font-weight: 600;
-    }
-
-    .upload-icon {
-      font-size: 48px;
-      color: #007bff;
-      margin-bottom: 10px;
     }
 
     .upload-area {
@@ -49,6 +78,7 @@
       cursor: pointer;
       margin-bottom: 20px;
       transition: border-color 0.3s;
+      position: relative;
     }
 
     .upload-area:hover {
@@ -56,7 +86,7 @@
     }
 
     .file-name {
-      margin-bottom: 10px;
+      margin-top: 10px;
       font-size: 14px;
       color: #555;
     }
@@ -79,32 +109,91 @@
     .btn:hover {
       background: #0056b3;
     }
+
+    .success-message {
+      display: none;
+      margin-top: 20px;
+      font-weight: 600;
+      color: green;
+    }
+
+    footer {
+      background: #f1f1f1;
+      padding: 20px 32px;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+
+    footer a {
+      color: #007bff;
+      text-decoration: none;
+      margin-left: 10px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav ul {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>📄 Word to PDF</h2>
+  <!-- Navigation -->
+  <nav>
+    <h1>📄 WordToPDF</h1>
+    <ul>
+      <li>Home</li>
+      <li>About</li>
+      <li>Contact</li>
+    </ul>
+  </nav>
 
-    <label for="fileInput">
-      <div class="upload-area" id="dropZone">
-        <div class="upload-icon">⬆️</div>
-        <div>Drag & drop or click to select a Word file</div>
-      </div>
-    </label>
+  <!-- Main Upload Card -->
+  <main>
+    <div class="card">
+      <form id="uploadForm" action="/convert" method="POST" enctype="multipart/form-data">
+        <label for="fileInput">
+          <div class="upload-area" id="dropZone">
+            <lottie-player src="https://assets3.lottiefiles.com/private_files/lf30_cgfdhxgx.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></lottie-player>
+            <div>Click or Drag & Drop a Word file</div>
+          </div>
+        </label>
 
-    <div class="file-name" id="fileName">No file selected</div>
+        <input type="file" name="wordFile" id="fileInput" accept=".doc,.docx" required />
+        <div class="file-name" id="fileName">No file selected</div>
+        <button type="submit" class="btn">Convert to PDF</button>
+        <div class="success-message" id="successMsg">✅ Your file is ready! <a href="#" id="downloadLink" download>Download PDF</a></div>
+      </form>
+    </div>
+  </main>
 
-    <form id="uploadForm" action="/convert" method="post" enctype="multipart/form-data">
-      <input type="file" name="wordFile" id="fileInput" accept=".doc,.docx" required />
-      <button type="submit" class="btn">Convert to PDF</button>
-    </form>
-  </div>
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 WordToPDF. All rights reserved.
+    <a href="https://github.com/your-username" target="_blank">GitHub</a> |
+    <a href="#">Privacy</a> |
+    <a href="#">Terms</a>
+  </footer>
 
   <script>
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const fileName = document.getElementById('fileName');
+    const successMsg = document.getElementById('successMsg');
+    const downloadLink = document.getElementById('downloadLink');
 
     dropZone.addEventListener('click', () => fileInput.click());
 
@@ -123,6 +212,7 @@
       if (file) {
         fileInput.files = e.dataTransfer.files;
         fileName.textContent = file.name;
+        successMsg.style.display = "none";
       }
       dropZone.style.borderColor = '#ccc';
     });
@@ -130,9 +220,19 @@
     fileInput.addEventListener('change', () => {
       if (fileInput.files.length > 0) {
         fileName.textContent = fileInput.files[0].name;
+        successMsg.style.display = "none";
       } else {
         fileName.textContent = 'No file selected';
       }
+    });
+
+    // Simulate success message after conversion
+    document.getElementById('uploadForm').addEventListener('submit', (e) => {
+      e.preventDefault(); // prevent actual submission for demo
+      setTimeout(() => {
+        successMsg.style.display = "block";
+        downloadLink.href = "#"; // replace with actual download link after server response
+      }, 1000);
     });
   </script>
 
