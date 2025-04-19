@@ -1,20 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Word to PDF Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial; padding: 40px; background: #f2f2f2; text-align: center; }
-    h1 { color: #333; }
-    form { background: white; padding: 30px; display: inline-block; border-radius: 10px; }
-    input[type=file] { margin: 10px 0; }
-    button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; }
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f3f6fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .card h2 {
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      color: #007bff;
+      margin-bottom: 10px;
+    }
+
+    .upload-area {
+      border: 2px dashed #ccc;
+      padding: 30px;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: border-color 0.3s;
+    }
+
+    .upload-area:hover {
+      border-color: #007bff;
+    }
+
+    .file-name {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 <body>
-  <h1>Word to PDF Converter</h1>
-  <form action="/convert" method="post" enctype="multipart/form-data">
-    <input type="file" name="wordFile" required><br>
-    <button type="submit">Convert to PDF</button>
-  </form>
+
+  <div class="card">
+    <h2>📄 Word to PDF</h2>
+
+    <label for="fileInput">
+      <div class="upload-area" id="dropZone">
+        <div class="upload-icon">⬆️</div>
+        <div>Drag & drop or click to select a Word file</div>
+      </div>
+    </label>
+
+    <div class="file-name" id="fileName">No file selected</div>
+
+    <form id="uploadForm" action="/convert" method="post" enctype="multipart/form-data">
+      <input type="file" name="wordFile" id="fileInput" accept=".doc,.docx" required />
+      <button type="submit" class="btn">Convert to PDF</button>
+    </form>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#007bff';
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.style.borderColor = '#ccc';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        fileInput.files = e.dataTransfer.files;
+        fileName.textContent = file.name;
+      }
+      dropZone.style.borderColor = '#ccc';
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        fileName.textContent = fileInput.files[0].name;
+      } else {
+        fileName.textContent = 'No file selected';
+      }
+    });
+  </script>
+
 </body>
 </html>
