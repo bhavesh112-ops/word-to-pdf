@@ -6,14 +6,10 @@ RUN apt-get update && apt-get install -y libreoffice
 # Create app directory
 WORKDIR /app
 
-# Copy files
-COPY . .
-
-# Install dependencies
+COPY package*.json ./
 RUN npm install
 
-# Expose the app
-EXPOSE 3000
+COPY . .
 
-# Start server
+EXPOSE 3000
 CMD ["node", "server.js"]
