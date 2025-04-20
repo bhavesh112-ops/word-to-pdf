@@ -6,6 +6,13 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
+const { exec } = require("child_process");
+
+exec(`libreoffice --headless --convert-to pdf uploads/${fileName} --outdir converted`, (err) => {
+  if (err) return res.status(500).send("Conversion error");
+  res.download(`converted/${convertedFileName}`);
+});
+
 const upload = multer({ dest: 'uploads/' });
 app.use(express.static('public'));
 
