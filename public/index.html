@@ -174,7 +174,9 @@
 
         <input type="file" name="wordFile" id="fileInput" accept=".doc,.docx" required />
         <div class="file-name" id="fileName">No file selected</div>
+	
         <button type="submit" class="btn">Convert to PDF</button>
+		<button class="btn" id="paymentBtn" style="display: none;" onclick="window.location.href='upi://pay?pa=bhaveshprajapat45@upi&pn=BhaveshPrajapat&am=5&cu=INR'">Pay ₹5 only</button>
         <div class="success-message" id="successMsg">✅ Your file is ready! <a href="#" id="downloadLink" download>Download PDF</a></div>
       </form>
     </div>
